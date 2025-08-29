@@ -1,0 +1,36 @@
+<div class="order-list-container">
+	<h2>Đơn hàng của bạn</h2>
+	<mat-list>
+		<mat-list-item *ngFor="let order of orders">
+			<h4 matLine>Mã đơn: {{order.id}}</h4>
+			<p matLine>Ngày đặt: {{order.date | date:'short'}}</p>
+			<p matLine>Trạng thái: {{order.status}}</p>
+			<button mat-button [routerLink]="['/order', order.id]">Xem chi tiết</button>
+		</mat-list-item>
+	</mat-list>
+</div>
+<div class="order-list-container">
+	<mat-card>
+		<mat-card-title>Đơn hàng của bạn</mat-card-title>
+		<mat-table [dataSource]="orders">
+			<ng-container matColumnDef="id">
+				<mat-header-cell *matHeaderCellDef> Mã đơn </mat-header-cell>
+				<mat-cell *matCellDef="let order"> {{order.id}} </mat-cell>
+			</ng-container>
+			<ng-container matColumnDef="date">
+				<mat-header-cell *matHeaderCellDef> Ngày đặt </mat-header-cell>
+				<mat-cell *matCellDef="let order"> {{order.date | date}} </mat-cell>
+			</ng-container>
+			<ng-container matColumnDef="total">
+				<mat-header-cell *matHeaderCellDef> Tổng tiền </mat-header-cell>
+				<mat-cell *matCellDef="let order"> {{order.total | currency:'VND'}} </mat-cell>
+			</ng-container>
+			<ng-container matColumnDef="status">
+				<mat-header-cell *matHeaderCellDef> Trạng thái </mat-header-cell>
+				<mat-cell *matCellDef="let order"> {{order.status}} </mat-cell>
+			</ng-container>
+			<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+			<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+		</mat-table>
+	</mat-card>
+</div>

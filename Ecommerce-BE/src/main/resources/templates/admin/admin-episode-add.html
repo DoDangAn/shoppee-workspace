@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm tập phim</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+    <style>
+        .sidebar { background-color: #f8f9fa; min-height: 100vh; padding-top: 20px; }
+        .sidebar a { display: block; padding: 10px 15px; color: #333; text-decoration: none; }
+        .sidebar a:hover { background-color: #e9ecef; }
+        .sidebar .submenu { padding-left: 30px; }
+        .sidebar .active { background-color: #007bff; color: white; }
+        .nav-toggle-icon { font-size: 0.8em; }
+        .form-container { max-width: 800px; margin: 0 auto; }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="~{fragments/admin-sidebar :: sidebar}"></div>
+        <main class="col-md-10 ms-sm-auto px-md-4 mt-3">
+            <div class="mb-3 d-flex justify-content-between align-items-center">
+                <a th:if="${product != null}" th:href="@{/admin/updateProduct/{id}(id=${product.id})}" class="btn btn-secondary">← Quay lại</a>
+                <a th:unless="${product != null}" href="/admin/home" class="btn btn-secondary">← Quay lại</a>
+                <button class="btn btn-success" type="submit" form="addEpisodeForm">Lưu tập phim</button>
+            </div>
+            <div class="container">
+                <div class="form-container">
+                    <h2 th:if="${product != null}">Thêm tập phim cho <span th:text="${product.productName}"></span></h2>
+                    <h2 th:unless="${product != null}">Thêm tập phim</h2>
+                    <p id="productName-error" style="color: red;" th:text="${error != null ? error : ''}"></p>
+                    <form id="addEpisodeForm" th:action="@{/admin/addEpisode/{productId}(productId=${product.id})}" th:object="${productName}" method="post" enctype="multipart/form-data">
+                        <input th:if="${product != null}" type="hidden" name="productId" th:value="${product.id}" />
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Tiêu đề tập</label>
+                            <input type="text" class="form-control" id="title" th:field="*{title}" required/>
+                            <div th:if="${#fields.hasErrors('title')}" class="text-danger">
+                                <span th:errors="*{title}"></span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productName" class="form-label">Số tập</label>
+                            <input type="text" class="form-control" id="productName" th:field="*{productName}" required/>
+                            <div th:if="${#fields.hasErrors('productName')}" class="text-danger">
+                                <span th:errors="*{productName}"></span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="episodeTitle" class="form-label">Tiêu đề phụ (Episode Title)</label>
+                            <input type="text" class="form-control" id="episodeTitle" th:field="*{episodeTitle}"/>
+                            <div th:if="${#fields.hasErrors('episodeTitle')}" class="text-danger">
+                                <span th:errors="*{episodeTitle}"></span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="duration" class="form-label">Thời lượng</label>
+                            <input type="text" class="form-control" id="duration" th:field="*{duration}"/>
+                            <div th:if="${#fields.hasErrors('duration')}" class="text-danger">
+                                <span th:errors="*{duration}"></span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="imageFile" class="form-label">Hình ảnh</label>
+                            <input type="file" class="form-control" id="imageFile" name="imageFile" accept="image/*" />
+                            <input type="hidden" id="imageUrl" th:field="*{imageUrl}" />
+                            <div th:if="${product != null and product.imageUrl != null}">
+                                <img th:src="${product.imageUrl}" alt="Hình ảnh tập phim" class="img-thumbnail mt-2" style="max-width: 100px;" />
+                            </div>
+                            <div th:unless="${product != null and product.imageUrl != null}">
+                                <img src="/uploads/default.png" alt="Hình ảnh mặc định" class="img-thumbnail mt-2" style="max-width: 100px;" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="videoFiles" class="form-label">Video Files (chọn nhiều file)</label>
+                            <input type="file" class="form-control" id="videoFiles" name="videoFile" multiple accept="video/*" />
+                            <input type="hidden" id="videoPublicIdsHidden" th:field="*{videoPublicId}" />
+                            <small class="form-text text-muted">Chọn nhiều file video để tải lên Cloudinary, hoặc để trống nếu chưa có video</small>
+                        </div>
+                        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+                        <button type="submit" class="btn btn-primary">Lưu tập phim</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+```

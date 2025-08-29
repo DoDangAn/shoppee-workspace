@@ -1,0 +1,40 @@
+<div class="cart-container">
+	<h2>Giỏ hàng của bạn</h2>
+	<mat-list>
+		<mat-list-item *ngFor="let item of cartItems">
+			<img matListAvatar [src]="item.image" alt="{{item.name}}" />
+			<h4 matLine>{{item.name}}</h4>
+			<p matLine>Số lượng: {{item.quantity}}</p>
+			<p matLine>Giá: {{item.price | currency:'VND'}}</p>
+			<button mat-raised-button color="warn" (click)="removeItem(item)">Xóa</button>
+		</mat-list-item>
+	</mat-list>
+	<div class="cart-actions">
+		<button mat-raised-button color="primary" routerLink="/order">Đặt hàng</button>
+	</div>
+</div>
+<div class="cart-container">
+	<mat-card>
+		<mat-card-title>Giỏ hàng của bạn</mat-card-title>
+		<mat-table [dataSource]="cartItems">
+			<ng-container matColumnDef="name">
+				<mat-header-cell *matHeaderCellDef> Sản phẩm </mat-header-cell>
+				<mat-cell *matCellDef="let item"> {{item.name}} </mat-cell>
+			</ng-container>
+			<ng-container matColumnDef="quantity">
+				<mat-header-cell *matHeaderCellDef> Số lượng </mat-header-cell>
+				<mat-cell *matCellDef="let item"> {{item.quantity}} </mat-cell>
+			</ng-container>
+			<ng-container matColumnDef="price">
+				<mat-header-cell *matHeaderCellDef> Giá </mat-header-cell>
+				<mat-cell *matCellDef="let item"> {{item.price | currency:'VND'}} </mat-cell>
+			</ng-container>
+			<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+			<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+		</mat-table>
+		<div class="cart-total">
+			<b>Tổng tiền: </b> {{getTotal() | currency:'VND'}}
+		</div>
+		<button mat-raised-button color="primary">Đặt hàng</button>
+	</mat-card>
+</div>

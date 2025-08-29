@@ -1,0 +1,17 @@
+<div class="product-detail-container">
+	<mat-card *ngIf="product">
+		<img mat-card-image [src]="product.image" alt="{{product.name}}">
+		<mat-card-title>{{product.name}}</mat-card-title>
+		<mat-card-content>
+			<p>{{product.description}}</p>
+			<p><b>Giá:</b> {{product.price | currency:'VND'}}</p>
+		</mat-card-content>
+		<mat-card-actions>
+			<button mat-raised-button color="accent">Thêm vào giỏ</button>
+		</mat-card-actions>
+	</mat-card>
+	<div *ngIf="!product">
+		<mat-spinner></mat-spinner>
+		<p>Đang tải thông tin sản phẩm...</p>
+	</div>
+</div>

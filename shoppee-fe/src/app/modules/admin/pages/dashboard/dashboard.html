@@ -1,0 +1,24 @@
+<div class="admin-dashboard-container">
+	<mat-toolbar color="primary">
+		<span>Quản trị hệ thống</span>
+	</mat-toolbar>
+	<div class="dashboard-stats">
+		<mat-card>
+			<mat-card-title>Tổng sản phẩm</mat-card-title>
+			<mat-card-content>{{stats.products}}</mat-card-content>
+		</mat-card>
+		<mat-card>
+			<mat-card-title>Tổng đơn hàng</mat-card-title>
+			<mat-card-content>{{stats.orders}}</mat-card-content>
+		</mat-card>
+		<mat-card>
+			<mat-card-title>Tổng người dùng</mat-card-title>
+			<mat-card-content>{{stats.users}}</mat-card-content>
+		</mat-card>
+	</div>
+	<div class="dashboard-management">
+		<button mat-raised-button color="accent" routerLink="/admin/user-management">Quản lý người dùng</button>
+		<button mat-raised-button color="accent" routerLink="/product">Quản lý sản phẩm</button>
+		<button mat-raised-button color="accent" routerLink="/order">Quản lý đơn hàng</button>
+	</div>
+</div>

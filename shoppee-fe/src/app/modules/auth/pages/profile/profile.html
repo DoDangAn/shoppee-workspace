@@ -1,0 +1,21 @@
+<div class="profile-container">
+  <mat-card>
+    <mat-card-title>Hồ sơ cá nhân</mat-card-title>
+    <mat-card-content *ngIf="profile">
+      <p><b>Họ và tên:</b> {{profile.name}}</p>
+      <p><b>Email:</b> {{profile.email}}</p>
+      <p><b>Ngày tạo:</b> {{profile.createdAt | date}}</p>
+      <p><b>Quyền:</b> <span *ngIf="isAdmin(); else userRole">ADMIN</span><ng-template #userRole>USER</ng-template></p>
+      <div class="action-row">
+        <button mat-raised-button color="accent" *ngIf="!isAdmin()" (click)="promote()" [disabled]="promoting">{{promoting? 'Đang xử lý...' : 'Nâng cấp Admin'}}</button>
+        <button mat-raised-button color="primary" *ngIf="isAdmin()" (click)="goAdmin()">Vào trang Admin</button>
+      </div>
+      <div *ngIf="promoteMsg" style="margin-top:8px;color:#1976d2">{{promoteMsg}}</div>
+    </mat-card-content>
+    <div *ngIf="!profile">
+      <mat-spinner></mat-spinner>
+      <p>Đang tải thông tin...</p>
+    </div>
+    <button mat-raised-button color="primary">Cập nhật thông tin</button>
+  </mat-card>
+</div>

@@ -1,0 +1,61 @@
+<mat-card class="register-card">
+	<mat-card-header><mat-card-title>Đăng ký</mat-card-title></mat-card-header>
+	<mat-card-content>
+		<form #regForm="ngForm" (ngSubmit)="register(regForm)" novalidate>
+			<mat-form-field appearance="outline" class="full-width">
+				<mat-label>Họ và tên</mat-label>
+				<input matInput name="fullname" [(ngModel)]="fullname" required #fullCtrl="ngModel">
+				<mat-error *ngIf="fullCtrl.invalid && (fullCtrl.dirty || fullCtrl.touched)">Bắt buộc</mat-error>
+			</mat-form-field>
+			<mat-form-field appearance="outline" class="full-width">
+				<mat-label>Tên đăng nhập</mat-label>
+				<input matInput name="username" [(ngModel)]="username" required minlength="3" #userCtrl="ngModel">
+				<mat-error *ngIf="userCtrl.invalid && (userCtrl.dirty || userCtrl.touched)">Tối thiểu 3 ký tự</mat-error>
+			</mat-form-field>
+			<mat-form-field appearance="outline" class="full-width">
+				<mat-label>Email</mat-label>
+				<input matInput type="email" name="email" [(ngModel)]="email" required email #emailCtrl="ngModel">
+				<mat-error *ngIf="emailCtrl.invalid && (emailCtrl.dirty || emailCtrl.touched)">Email không hợp lệ</mat-error>
+			</mat-form-field>
+					<mat-form-field appearance="outline" class="full-width">
+						<mat-label>Giới tính</mat-label>
+						<mat-select name="gender" [(ngModel)]="gender" required #genderCtrl="ngModel">
+							<mat-option [value]="true">Nam</mat-option>
+							<mat-option [value]="false">Nữ</mat-option>
+						</mat-select>
+						<mat-error *ngIf="genderCtrl.invalid && (genderCtrl.dirty || genderCtrl.touched)">Chọn giới tính</mat-error>
+					</mat-form-field>
+					<mat-form-field appearance="outline" class="full-width">
+						<mat-label>Ngày sinh</mat-label>
+						<input matInput type="date" name="birthday" [(ngModel)]="birthday" required #birthCtrl="ngModel">
+						<mat-error *ngIf="birthCtrl.invalid && (birthCtrl.dirty || birthCtrl.touched)">Chọn ngày sinh</mat-error>
+					</mat-form-field>
+			<mat-form-field appearance="outline" class="full-width">
+				<mat-label>Mật khẩu</mat-label>
+				<input matInput type="password" name="password" [(ngModel)]="password" required minlength="4" #passCtrl="ngModel">
+				<mat-error *ngIf="passCtrl.invalid && (passCtrl.dirty || passCtrl.touched)">Tối thiểu 4 ký tự</mat-error>
+			</mat-form-field>
+
+						<mat-form-field appearance="outline" class="full-width">
+							<mat-label>Mã admin (tuỳ chọn)</mat-label>
+							<input matInput name="adminCode" [(ngModel)]="adminCode">
+						</mat-form-field>
+			<div class="error" *ngIf="error">{{ error }}</div>
+			<button mat-raised-button color="primary" class="full-width" type="submit" [disabled]="regForm.invalid || loading">
+				<span *ngIf="!loading">Đăng ký</span>
+				<mat-icon *ngIf="loading" class="spin">sync</mat-icon>
+			</button>
+		</form>
+	</mat-card-content>
+	<mat-card-actions>
+		<a mat-button routerLink="/auth/login">Đã có tài khoản? Đăng nhập</a>
+	</mat-card-actions>
+</mat-card>
+
+<style>
+	.register-card { max-width: 480px; margin:40px auto; }
+	.full-width { width:100%; }
+	.error { color:#d32f2f; font-size:13px; margin:8px 0 4px; }
+	.spin { animation: spin 1s linear infinite; }
+	@keyframes spin { from { transform: rotate(0deg);} to { transform: rotate(360deg);} }
+</style>

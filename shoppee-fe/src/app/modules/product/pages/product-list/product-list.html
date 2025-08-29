@@ -1,0 +1,78 @@
+<div class="product-list-container">
+	<h2>Danh sách sản phẩm</h2>
+	<div class="product-filter-bar">
+		<mat-form-field appearance="outline">
+			<mat-label>Tìm kiếm sản phẩm</mat-label>
+			<input matInput placeholder="Nhập tên sản phẩm..." [(ngModel)]="searchText" (ngModelChange)="onSearch()" />
+		</mat-form-field>
+		<mat-form-field appearance="outline">
+			<mat-label>Lọc theo giá</mat-label>
+			<mat-select [(ngModel)]="priceFilter" (selectionChange)="onFilter()">
+				<mat-option value="">Tất cả</mat-option>
+				<mat-option value="low">Dưới 500k</mat-option>
+				<mat-option value="mid">500k - 2tr</mat-option>
+				<mat-option value="high">Trên 2tr</mat-option>
+			</mat-select>
+		</mat-form-field>
+		<mat-form-field appearance="outline">
+			<mat-label>Lọc theo loại</mat-label>
+			<mat-select [(ngModel)]="categoryFilter" (selectionChange)="onFilter()">
+				<mat-option value="">Tất cả</mat-option>
+				<mat-option *ngFor="let cat of categories" [value]="cat">{{cat}}</mat-option>
+			</mat-select>
+		</mat-form-field>
+		<mat-form-field appearance="outline">
+			<mat-label>Lọc theo trạng thái</mat-label>
+			<mat-select [(ngModel)]="statusFilter" (selectionChange)="onFilter()">
+				<mat-option value="">Tất cả</mat-option>
+				<mat-option value="active">Còn hàng</mat-option>
+				<mat-option value="inactive">Hết hàng</mat-option>
+			</mat-select>
+		</mat-form-field>
+	</div>
+	<mat-grid-list cols="4" rowHeight="350px" gutterSize="16px">
+		<mat-grid-tile *ngFor="let product of filteredProducts">
+			<mat-card>
+				<img mat-card-image [src]="product.image" alt="{{product.name}}">
+				<mat-card-title>{{product.name}}</mat-card-title>
+				<mat-card-content>
+					<p>{{product.description}}</p>
+					<p><b>Giá:</b> {{product.price | currency:'VND'}} </p>
+				</mat-card-content>
+				<mat-card-actions>
+					<button mat-raised-button color="accent" routerLink="/cart">Thêm vào giỏ</button>
+					<button mat-button [routerLink]="['/product', product.id]">Xem chi tiết</button>
+				</mat-card-actions>
+			</mat-card>
+		</mat-grid-tile>
+	</mat-grid-list>
+</div>
+<div class="product-list-container">
+	<mat-toolbar color="primary">
+		<span>Danh sách sản phẩm</span>
+		<span class="spacer"></span>
+		<mat-form-field appearance="outline">
+			<mat-label>Tìm kiếm sản phẩm</mat-label>
+			      <input matInput [(ngModel)]="searchText" placeholder="Nhập tên sản phẩm...">
+		</mat-form-field>
+	</mat-toolbar>
+
+	<div class="product-list">
+		<mat-grid-list cols="4" rowHeight="350px" gutterSize="16px">
+			<mat-grid-tile *ngFor="let product of filteredProducts">
+				<mat-card>
+					<img mat-card-image [src]="product.image" alt="{{product.name}}">
+					<mat-card-title>{{product.name}}</mat-card-title>
+					<mat-card-content>
+						<p>{{product.description}}</p>
+						<p><b>Giá:</b> {{product.price | currency:'VND'}}</p>
+					</mat-card-content>
+					<mat-card-actions>
+						<button mat-raised-button color="accent">Thêm vào giỏ</button>
+						<button mat-button [routerLink]="['/product', product.id]">Xem chi tiết</button>
+					</mat-card-actions>
+				</mat-card>
+			</mat-grid-tile>
+		</mat-grid-list>
+	</div>
+</div>

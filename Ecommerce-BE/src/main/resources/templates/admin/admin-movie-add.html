@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Admin - Thêm phim</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div th:replace="~{fragments/admin-sidebar :: sidebar}"></div>
+
+        <main class="col-md-10 ms-sm-auto px-md-4 mt-3">
+            <div class="mb-3 d-flex justify-content-between align-items-center">
+                <a th:href="@{/admin/home}" class="btn btn-secondary">← Quay lại</a>
+            </div>
+
+            <!-- Form thêm phim -->
+            <div class="container">
+                <div class="form-container">
+                    <h2>Thêm phim mới</h2>
+                    <p id="login-error" style="color: red;" th:text="${error != null ? error : ''}"></p>
+                    <form id="addForm" th:action="@{/admin/insertProduct}" th:object="${product}" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="productName" class="form-label">Tên phim <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="productName" th:field="*{productName}" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="productName" class="form-label">Tập phim (hoặc 'Movie') <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="productName" th:field="*{productName}" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="season" class="form-label">Mùa</label>
+                            <input type="number" class="form-control" id="season" name="season" min="0" value="0" />
+                            <small class="form-text text-muted">Để trống nếu là phim lẻ</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Mô tả <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="description" th:field="*{description}" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="categoryID" class="form-label">Thể loại <span class="text-danger">*</span></label>
+                            <select class="form-select" id="categoryID" th:field="*{category.categoryID}" required>
+                                <option value="">Chọn thể loại</option>
+                                <option th:each="cat : ${category}" th:value="${cat.categoryID}" th:text="${cat.categoryName}"></option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="countryName" class="form-label">Quốc gia (Nhập thủ công hoặc từ OMDB) <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="countryName" name="countryName" required />
+                        </div>
+                        <div class="mb-10">
+                            <label for="countryId" class="form-label">Hoặc chọn quốc gia có sẵn</label>
+                            <select class="form-select" id="countryId" name="countryId">
+                                <option value="">Chọn quốc gia</option>
+                                <option th:each="country : ${countries}"
+                                        th:value="${country.countryId}"
+                                        th:text="${country.countryName}"></option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="imageFile" class="form-label">Hình ảnh</label>
+                            <input type="file" class="form-control" id="imageFile" name="imageFile" />
+                            <input type="hidden" id="imageURL" th:field="*{imageUrl}" />
+                            <small class="form-text text-muted">Bạn có thể upload ảnh mới hoặc chọn ảnh từ OMDB API</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="videoFiles" class="form-label">Video Files (chọn nhiều file)</label>
+                            <input type="file" class="form-control" id="videoFiles" name="videoFiles" multiple accept="video/*" />
+                            <input type="hidden" id="videoPublicIdsHidden" th:field="*{videoPublicId}" />
+                            <small class="form-text text-muted">Chọn nhiều file video để tải lên Cloudinary, hoặc để trống nếu chưa có video</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="director" class="form-label">Đạo diễn <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="director" th:field="*{director}" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="director" class="form-label">Điểm số trên IMDB <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="score" th:field="*{score}" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="actors" class="form-label">Diễn viên <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="actors" th:field="*{actor}" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="duration" class="form-label">Thời lượng <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="duration" th:field="*{duration}" required></textarea>
+                        </div>
+                        <input type="hidden" name="selectedCountry" id="selectedCountry" />
+                        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+                        <div class="text-end mt-3">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Lưu phim
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Tìm kiếm phim từ OMDB API -->
+                    <div class="search-section">
+                        <h4>Tìm kiếm phim để tự động điền</h4>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="searchFilm" placeholder="Nhập tên phim">
+                            <button class="btn btn-secondary" id="searchButton">Tìm kiếm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${product.productName == 'series'}" class="card">
+                <div class="card-header">Danh sách tập phim</div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Tập</th>
+                            <th>Tiêu đề</th>
+                            <th>Thời lượng</th>
+                            <th>Hành động</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="productName : ${productNames}">
+                            <td th:text="${productName.productName}"></td>
+                            <td th:text="${productName.title}"></td>
+                            <td th:text="${productName.duration}"></td>
+                            <td>
+                                <a th:href="@{/admin/productName/update/{id}(id=${productName.id})}" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i> Sửa
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <a th:href="@{/admin/addEpisode/{id}(id=${product.id})}" class="btn btn-success">+ Thêm tập phim</a>
+                </div>
+            </div>
+
+            <!-- Modal hiển thị danh sách phim và chi tiết -->
+            <div class="modal fade" id="filmModal" tabindex="-1" aria-labelledby="filmModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="filmModalLabel">Chọn phim</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Nhập từ khóa để tìm phim.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="useFilm" style="display: none;">Sử dụng phim này</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Logic kiểm soát hai trường quốc gia
+        $("#countryName").on("input", function() {
+            if ($(this).val().trim() !== "") {
+                $("#countryId").val("");
+                $("#countryId").prop("disabled", true);
+                $("#selectedCountry").val($(this).val());
+            } else {
+                $("#countryId").prop("disabled", false);
+                $("#selectedCountry").val("");
+            }
+        });
+
+        $("#countryId").on("change", function() {
+            if ($(this).val() !== "") {
+                $("#countryName").val("");
+                $("#countryName").prop("disabled", true);
+                $("#selectedCountry").val($(this).val());
+            } else {
+                $("#countryName").prop("disabled", false);
+                $("#selectedCountry").val("");
+            }
+        });
+
+        $("#searchButton").click(function() {
+            var keyword = $("#searchFilm").val().trim();
+            if (!keyword) {
+                alert("Vui lòng nhập tên phim!");
+                return;
+            }
+
+            $.getJSON("http://www.omdbapi.com/?s=" + encodeURIComponent(keyword) + "&apikey=28111d1a", function(data) {
+                if (data.Response === "False" || !data.Search) {
+                    $("#filmModal .modal-body").html("<p>Không tìm thấy phim với từ khóa: " + keyword + "</p>");
+                    $("#useFilm").hide();
+                    $("#filmModal").modal("show");
+                    return;
+                }
+
+                var html = "<div class='table-responsive'><table class='table table-bordered film-table'>";
+                html += "<thead><tr><th>Mã IMDb</th><th>Tên phim</th><th>Năm</th><th>Poster</th></tr></thead><tbody>";
+                data.Search.forEach(function(film) {
+                    html += "<tr>";
+                    html += "<td><button class='imdb-btn btn btn-link' data-imdb='" + film.imdbID + "' data-type='" + film.Type + "'>" + film.imdbID + "</button></td>";
+                    html += "<td>" + film.Title + "</td>";
+                    html += "<td>" + film.Year + "</td>";
+                    html += "<td><img src='" + (film.Poster !== "N/A" ? film.Poster : "/uploads/default.png") + "' alt='Poster' style='max-width: 100px;'/></td>";
+                    html += "</tr>";
+                });
+                html += "</tbody></table></div>";
+                $("#filmModal .modal-body").html(html);
+                $("#filmModal .modal-title").text("Danh sách phim");
+                $("#useFilm").hide();
+                $("#filmModal").modal("show");
+
+                $(".imdb-btn").click(function() {
+                    var imdbID = $(this).data("imdb");
+                    var type = $(this).data("type");
+
+                    $.getJSON("http://www.omdbapi.com/?i=" + imdbID + "&apikey=28111d1a&plot=full", function(filmData) {
+                        if (filmData.Response === "False") {
+                            $("#filmModal .modal-body").html("<p>Không lấy được chi tiết phim!</p>");
+                            $("#useFilm").hide();
+                            return;
+                        }
+
+                        var detailHtml = "";
+                        detailHtml += "<img src='" + (filmData.Poster !== "N/A" ? filmData.Poster : "/uploads/default.png") + "' style='max-width: 150px; float: left; margin-right: 10px;'/>";
+                        detailHtml += "<div>";
+                        detailHtml += "<b>Tên phim:</b> " + filmData.Title + "<br/>";
+                        detailHtml += "<b>Năm phát hành:</b> " + filmData.Year + "<br/>";
+                        detailHtml += "<b>Đạo diễn:</b> " + filmData.Director + "<br/>";
+                        detailHtml += "<b>Diễn viên:</b> " + filmData.Actors + "<br/>";
+                        detailHtml += "<b>Thời lượng:</b> " + filmData.Runtime + "<br/>";
+                        detailHtml += "<b>Quốc gia:</b> " + (filmData.Country || "Không có thông tin") + "<br/>";
+                        detailHtml += "<b>Cốt truyện:</b> " + filmData.Plot + "<br/>";
+                        detailHtml += "<b>Điểm:</b> " + (filmData.imdbRating !== "N/A" ? filmData.imdbRating : "Không có thông tin") + "<br/>";
+                        detailHtml += "</div>";
+
+                        if (type === "series" && filmData.totalSeasons) {
+                            $.getJSON("http://www.omdbapi.com/?i=" + imdbID + "&Season=1&apikey=28111d1a", function(seasonData) {
+                                if (seasonData.Response === "True") {
+                                    detailHtml += "<b>Mùa:</b> 1 (Tổng số mùa: " + filmData.totalSeasons + ")<br/>";
+                                    $("#filmModal .modal-body").html(detailHtml);
+                                    $("#filmModal .modal-title").text(filmData.Title);
+                                    $("#useFilm").show();
+
+                                    $("#filmModal").data("filmInfo", {
+                                        title: filmData.Title,
+                                        description: filmData.Plot,
+                                        imageURL: filmData.Poster !== "N/A" ? filmData.Poster : "",
+                                        productName: "",
+                                        season: "1",
+                                        director: filmData.Director,
+                                        actors: filmData.Actors,
+                                        duration: filmData.Runtime,
+                                        country: filmData.Country || "",
+                                        score:filmData.imdbRating
+                                    });
+                                }
+                            }).fail(function() {
+                                detailHtml += "<b>Mùa:</b> Không lấy được thông tin mùa<br/>";
+                                $("#filmModal .modal-body").html(detailHtml);
+                                $("#useFilm").show();
+
+                                $("#filmModal").data("filmInfo", {
+                                    title: filmData.Title,
+                                    description: filmData.Plot,
+                                    imageURL: filmData.Poster !== "N/A" ? filmData.Poster : "",
+                                    productName: "",
+                                    season: "",
+                                    director: filmData.Director,
+                                    actors: filmData.Actors,
+                                    duration: filmData.Runtime,
+                                    country: filmData.Country || "",
+                                    score:filmData.imdbRating
+                                });
+                            });
+                        } else {
+                            $("#filmModal .modal-body").html(detailHtml);
+                            $("#filmModal .modal-title").text(filmData.Title);
+                            $("#useFilm").show();
+
+                            $("#filmModal").data("filmInfo", {
+                                title: filmData.Title,
+                                description: filmData.Plot,
+                                imageURL: filmData.Poster !== "N/A" ? filmData.Poster : "",
+                                productName: filmData.Type === "movie" ? "Movie" : "",
+                                season: "",
+                                director: filmData.Director,
+                                actors: filmData.Actors,
+                                duration: filmData.Runtime,
+                                country: filmData.Country || "",
+                                score:filmData.imdbRating
+                            });
+                        }
+                    }).fail(function() {
+                        $("#filmModal .modal-body").html("<p>Lỗi khi kết nối đến OMDB API!</p>");
+                        $("#useFilm").hide();
+                        $("#filmModal").modal("show");
+                    });
+                });
+            }).fail(function() {
+                $("#filmModal .modal-body").html("<p>Lỗi khi kết nối đến OMDB API!</p>");
+                $("#useFilm").hide();
+                $("#filmModal").modal("show");
+            });
+        });
+
+        $("#useFilm").click(function() {
+            var filmInfo = $("#filmModal").data("filmInfo");
+
+            $("#productName").val(filmInfo.title);
+            $("#description").val(filmInfo.description);
+            $("#productName").val(filmInfo.productName);
+            $("#season").val(filmInfo.season || "0");
+            $("#director").val(filmInfo.director);
+            $("#actors").val(filmInfo.actors);
+            $("#duration").val(filmInfo.duration);
+            $("#score").val(filmInfo.score);
+
+
+            if (filmInfo.country) {
+                $("#countryName").val(filmInfo.country.split(",")[0].trim());
+                $("#countryId").val("");
+                $("#countryId").prop("disabled", true);
+                $("#selectedCountry").val(filmInfo.country.split(",")[0].trim());
+            }
+
+            // Set the OMDB image URL as default
+            $("#imageURL").val(filmInfo.imageURL);
+
+            $("#filmModal").modal("hide");
+        });
+
+        // Add handler for image file input
+        $("#imageFile").on("change", function() {
+            if (this.files && this.files[0]) {
+                // If user selects a file, use the upload path
+                $("#imageURL").val("/uploads/" + $("#productName").val().toLowerCase().replace(/[^a-z0-9]/g, '_') + ".jpg");
+            } else {
+                // If no file selected, use the OMDB image URL
+                var filmInfo = $("#filmModal").data("filmInfo");
+                if (filmInfo && filmInfo.imageURL) {
+                    $("#imageURL").val(filmInfo.imageURL);
+                }
+            }
+        });
+    });
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93d80d2e39cbb019',t:'MTc0Njg2NTU4NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<header th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container-fluid px-5">
+        <a class="navbar-brand fw-bold text-warning" th:href="@{/user/home}">
+            NEW <span class="text-white">MOVIE</span>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav main-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/user/home}">Trang chủ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{'/movie/movies'}">Phim</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="categoryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Thể Loại
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+                        <li th:each="cat : ${category}">
+                            <a class="dropdown-item" th:href="@{'/movie/movies'(category=${cat.categoryID})}" th:text="${cat.categoryName}"></a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/user/movielist}">Danh sách của tôi</a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="fas fa-bell"></i></a>
+                </li>
+                <li class="nav-item">
+                    <form th:action="@{/user/search}" method="get" class="d-flex align-items-center">
+                        <input type="text" name="query" class="form-control me-2" placeholder="Tìm kiếm..." th:value="${keyword}" />
+                        <button type="submit" class="nav-link bg-transparent border-0"><i class="fas fa-search"></i></button>
+                    </form>
+                </li>
+                <li class="nav-item">
+                    <div id="user-info">
+                        <div th:if="${loggedInUser != null}" class="d-flex align-items-center">
+                            <a class="nav-link" th:href="@{/user}">
+                                <i class="fas fa-user"></i>
+                                <span th:text="${loggedInUser.username} ?: 'User'"></span>
+                            </a>
+                            <a class="nav-link d-inline" th:href="@{/logout}">
+                                <i class="fas fa-sign-out-alt"></i>
+                            </a>
+                        </div>
+                        <div th:if="${loggedInUser == null}">
+                            <a class="nav-link" th:href="@{/user/login}"><i class="fas fa-user"></i> Đăng nhập</a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</header>
+</body>
+</html>

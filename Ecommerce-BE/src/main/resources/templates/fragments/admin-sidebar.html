@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+</head>
+<body>
+    <nav th:fragment="sidebar" class="col-md-2 d-none d-md-block sidebar">
+        <link rel="stylesheet" href="/assets/css/sidebar.css" />
+        <div class="text-center mb-4">
+            <h4><span style="font-size: 0.7em">ADMIN</span></h4>
+        </div>
+        <a th:href="@{/admin/home}">
+            <i class="bi bi-clipboard-data-fill"></i> Dashboard
+        </a>
+        <a class="nav-link d-flex justify-content-between align-items-center"
+           data-bs-toggle="collapse" href="#movieMenu" role="button" aria-expanded="true"
+           aria-controls="movieMenu">
+            <span><i class="fas fa-film"></i> Phim</span>
+            <i class="fas fa-chevron-down nav-toggle-icon"></i>
+        </a>
+        <div class="collapse show" id="movieMenu">
+            <a class="nav-link submenu" th:href="@{/admin/movie}">
+                Danh sách phim
+            </a>
+            <a class="nav-link submenu" th:href="@{/admin/insertProduct}">
+                Thêm phim
+            </a>
+        </div>
+        <a class="nav-link d-flex justify-content-between align-items-center"
+           data-bs-toggle="collapse" href="#userMenu" role="button" aria-expanded="true"
+           aria-controls="userMenu">
+            <span><i class="bi bi-person-fill"></i> User</span>
+            <i class="fas fa-chevron-down nav-toggle-icon"></i>
+        </a>
+        <div class="collapse show" id="userMenu">
+            <a class="nav-link submenu" th:href="@{/admin/user}">
+                Danh sách user
+            </a>
+        </div>
+        <a th:href="@{/admin/categories}">
+            <i class="bi bi-globe"></i> Thể loại
+        </a>
+        <a th:href="@{/user/home}">
+            <i class="bi bi-house"></i> Trang chủ
+        </a>
+    </nav>
+</body>
+</html> 

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin - Quản lý phim và tập phim</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/admin-sidebar :: sidebar}"></div>
+
+    <!-- Nội dung chính -->
+    <main class="col-md-10 ms-sm-auto px-md-4 mt-3">
+      <div class="mb-3 d-flex justify-content-between align-items-center">
+        <a th:href="@{/admin/movie}" class="btn btn-secondary">← Quay lại</a>
+        <button class="btn btn-primary" type="submit" form="movieForm">Cập nhật phim</button>
+      </div>
+
+      <!-- Thông tin phim -->
+      <div class="card mb-4">
+        <div class="card-header">Thông tin phim</div>
+        <div class="card-body">
+          <form id="movieForm" th:action="@{/admin/updateProduct/{id}(id=${product.id})}" th:object="${product}" method="post" class="row g-3" enctype="multipart/form-data">
+            <div class="col-md-6">
+              <label for="productName" class="form-label">Tên phim</label>
+              <input type="text" class="form-control" id="productName" th:field="*{productName}" required />
+              <div th:if="${#fields.hasErrors('productName')}" class="text-danger">
+                <span th:errors="*{productName}"></span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label for="categoryID" class="form-label">Thể loại</label>
+              <select class="form-select" id="categoryID" th:field="*{categoryID}" required>
+                <option th:each="category : ${category}" th:value="${category.id}" th:text="${category.name}"></option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="description" class="form-label">Mô tả</label>
+              <textarea class="form-control" id="description" th:field="*{description}" rows="4"></textarea>
+            </div>
+            <div class="col-md-6">
+              <label for="imageFile" class="form-label">Hình ảnh</label>
+              <input type="file" class="form-control" id="imageFile" name="imageFile" accept="image/*" />
+              <img th:src="${product.imageUrl}" alt="Hình ảnh phim" class="img-thumbnail mt-2" style="max-width: 100px;" />
+            </div>
+            <div class="col-md-6">
+              <label for="videoFile" class="form-label">Video</label>
+              <input type="file" class="form-control" id="videoFile" name="videoFile" accept="video/*" />
+            </div>
+            <div class="col-md-6">
+              <label for="director" class="form-label">Đạo diễn</label>
+              <input type="text" class="form-control" id="director" name="director" th:value="${product.director}" />
+            </div>
+            <div class="col-md-6">
+              <label for="actors" class="form-label">Diễn viên</label>
+              <input type="text" class="form-control" id="actors" name="actors" th:value="${product.actor}" />
+            </div>
+            <div class="col-md-6">
+              <label for="productName" class="form-label">Loại phim</label>
+              <select class="form-select" id="productName" th:field="*{productName}" required>
+                <option value="series">Phim bộ</option>
+                <option value="Movie">Phim lẻ</option>
+              </select>
+            </div>
+            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+          </form>
+        </div>
+      </div>
+
+      <div th:if="${product.productName == 'series'}" class="card">
+        <div class="card-header">Danh sách tập phim</div>
+        <div class="card-body">
+          <table class="table table-striped">
+            <thead>
+            <tr>
+              <th>Tập</th>
+              <th>Tiêu đề</th>
+              <th>Thời lượng</th>
+              <th>Hành động</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="productName : ${productNames}">
+              <td th:text="${productName.productName}"></td>
+              <td th:text="${productName.title}"></td>
+              <td th:text="${productName.duration}"></td>
+              <td>
+                <a th:href="@{/admin/productName/update/{id}(id=${productName.id})}" class="btn btn-sm btn-warning">
+                  <i class="fas fa-edit"></i> Sửa
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <a th:href="@{/admin/addEpisode/{id}(id=${product.id})}" class="btn btn-success">+ Thêm tập phim</a>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

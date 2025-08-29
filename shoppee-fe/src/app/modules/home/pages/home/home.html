@@ -1,0 +1,39 @@
+<div class="home-container">
+	<mat-toolbar color="primary" class="main-toolbar">
+		<span class="logo">🛒 Shoppee</span>
+		<span class="spacer"></span>
+		<a mat-button routerLink="/" class="nav-link">Trang chủ</a>
+		<a mat-button routerLink="/product" class="nav-link">Sản phẩm</a>
+		<a mat-button routerLink="/cart" class="nav-link">Giỏ hàng</a>
+		<a mat-button routerLink="/order" class="nav-link">Đơn hàng</a>
+		<a mat-button routerLink="/admin" class="nav-link">Admin</a>
+		<a mat-button routerLink="/auth/login" class="nav-link">Đăng nhập</a>
+		<mat-form-field appearance="outline" class="search-form">
+			<mat-label>Tìm kiếm sản phẩm</mat-label>
+			<input matInput placeholder="Nhập tên sản phẩm..." />
+		</mat-form-field>
+	</mat-toolbar>
+
+	<div class="banner">
+		<img src="/assets/banner.jpg" alt="Banner" class="banner-img">
+	</div>
+
+	<div class="product-list">
+		<mat-grid-list cols="4" rowHeight="350px" gutterSize="16px">
+			<mat-grid-tile *ngFor="let product of products">
+				<mat-card>
+					<img mat-card-image [src]="product.image" alt="{{product.name}}">
+					<mat-card-title>{{product.name}}</mat-card-title>
+					<mat-card-content>
+						<p>{{product.description}}</p>
+						<p><b>Giá:</b> {{product.price | currency:'VND'}}</p>
+					</mat-card-content>
+					<mat-card-actions>
+						<button mat-raised-button color="accent">Thêm vào giỏ</button>
+						<button mat-button [routerLink]="['/product', product.id]">Xem chi tiết</button>
+					</mat-card-actions>
+				</mat-card>
+			</mat-grid-tile>
+		</mat-grid-list>
+	</div>
+</div>

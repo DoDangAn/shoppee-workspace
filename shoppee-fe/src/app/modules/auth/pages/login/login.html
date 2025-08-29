@@ -1,0 +1,41 @@
+<mat-card class="login-card">
+	<mat-card-header>
+		<mat-card-title>Đăng nhập</mat-card-title>
+	</mat-card-header>
+	<mat-card-content>
+		<form #loginForm="ngForm" (ngSubmit)="onLogin(loginForm)" novalidate>
+			<mat-form-field appearance="outline" class="full-width">
+				<mat-label>Tên đăng nhập</mat-label>
+				<input matInput name="username" [(ngModel)]="username" required minlength="3" #userCtrl="ngModel">
+				<mat-error *ngIf="userCtrl.invalid && (userCtrl.dirty || userCtrl.touched)">Tối thiểu 3 ký tự</mat-error>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" class="full-width">
+				<mat-label>Mật khẩu</mat-label>
+				<input matInput [type]="hide ? 'password' : 'text'" name="password" [(ngModel)]="password" required minlength="4" #passCtrl="ngModel">
+				<button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Ẩn/hiện mật khẩu'">
+					<mat-icon>{{ hide ? 'visibility' : 'visibility_off' }}</mat-icon>
+				</button>
+				<mat-error *ngIf="passCtrl.invalid && (passCtrl.dirty || passCtrl.touched)">Mật khẩu tối thiểu 4 ký tự</mat-error>
+			</mat-form-field>
+
+			<div class="error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+			<button mat-raised-button color="primary" class="full-width" type="submit" [disabled]="loginForm.invalid || loading">
+				<mat-icon *ngIf="loading" class="spin">sync</mat-icon>
+				<span *ngIf="!loading">Đăng nhập</span>
+			</button>
+		</form>
+	</mat-card-content>
+	<mat-card-actions align="end">
+		<a mat-button color="accent" routerLink="/auth/register">Đăng ký</a>
+	</mat-card-actions>
+</mat-card>
+
+<style>
+	.login-card { max-width: 420px; margin: 40px auto; }
+	.full-width { width: 100%; }
+	.error { color:#d32f2f; font-size:13px; margin-bottom:12px; }
+	.spin { animation: spin 1s linear infinite; }
+	@keyframes spin { from { transform: rotate(0deg);} to { transform: rotate(360deg);} }
+</style>

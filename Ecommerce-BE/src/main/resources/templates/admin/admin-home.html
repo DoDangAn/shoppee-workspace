@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang quản trị</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <link href="/assets/css/styles.css" rel="stylesheet"/>
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        .error-message, .success-message {
+            display: none;
+            margin-bottom: 15px;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #ffffff;
+        }
+        .card {
+            background-color: #2a2a2a;
+            border: none;
+        }
+        .table {
+            background-color: #2a2a2a;
+        }
+        .table th, .table td {
+            color: #ffffff;
+        }
+        .btn-primary, .btn-danger {
+            transition: background-color 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+<!-- Header/Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">DoDangAn</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/user/home">Trang chủ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/home">Quản trị</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="logout()">Đăng xuất</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col">
+            <h1 class="mt-4 text-white">Trang quản trị</h1>
+            <div class="loading" id="loading">Đang tải...</div>
+            <div class="error-message alert alert-danger" id="error-message"></div>
+            <div class="success-message alert alert-success" id="success-message"></div>
+
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="text-white">Tổng số phim</h5>
+                            <p class="text-white" id="movieCount">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="text-white">Tổng số người dùng</h5>
+                            <p class="text-white" id="userCount">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="text-white">Thể loại</h5>
+                            <p class="text-white" id="categoryCount">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col">
+                    <h3 class="text-white">Danh sách phim</h3>
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên phim</th>
+                            <th>Thể loại</th>
+                            <th>Năm phát hành</th>
+                            <th>Hành động</th>
+                        </tr>
+                        </thead>
+                        <tbody id="productList">
+                        <tr>
+                            <td colspan="5" class="text-center">Đang tải danh sách phim...</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-dark text-white text-center py-3 mt-4">
+    <p>© 2025 DoDangAn. All rights reserved.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/main.js"></script>
+<script>
+    function showLoading(show) {
+        document.getElementById('loading').style.display = show ? 'block' : 'none';
+    }
+
+    function showError(message) {
+        const errorDiv = document.getElementById('error-message');
+        errorDiv.textContent = message;
+        errorDiv.style.display = message ? 'block' : 'none';
+        if (message) setTimeout(() => errorDiv.style.display = 'none', 3000);
+    }
+
+    function showSuccess(message) {
+        const successDiv = document.getElementById('success-message');
+        successDiv.textContent = message;
+        successDiv.style.display = message ? 'block' : 'none';
+        if (message) setTimeout(() => successDiv.style.display = 'none', 3000);
+    }
+
+    function updateProductList(products) {
+        const productList = document.getElementById('productList');
+        productList.innerHTML = '';
+        const fragment = document.createDocumentFragment();
+        if (products && products.length > 0) {
+            products.forEach(product => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                        <td>${product.id}</td>
+                        <td>${product.productName}</td>
+                        <td>${product.category?.categoryName || 'N/A'}</td>
+                        <td>${product.releaseDate || 'N/A'}</td>
+                        <td>
+                            <a href="/admin/movie-update/${product.id}" class="btn btn-sm btn-primary">Sửa</a>
+                            <button class="btn btn-sm btn-danger delete-product-btn" data-product-id="${product.id}">
+                                <i class="fas fa-trash"></i> Xóa
+                            </button>
+                        </td>
+                    `;
+                fragment.appendChild(row);
+            });
+        } else {
+            const row = document.createElement('tr');
+            row.innerHTML = '<td colspan="5" class="text-center">Chưa có sản phẩm nào.</td>';
+            fragment.appendChild(row);
+        }
+        productList.appendChild(fragment);
+
+        // Gắn sự kiện cho các nút xóa
+        document.querySelectorAll('.delete-product-btn').forEach(button => {
+            button.addEventListener('click', async function() {
+                const productId = this.getAttribute('data-product-id');
+                if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
+                    showLoading(true);
+                    showError('');
+                    showSuccess('');
+                    try {
+                        const response = await fetch(`/api/admin/product/${productId}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                            }
+                        });
+                        const data = await response.json();
+                        if (response.ok) {
+                            showSuccess(data.message || 'Xóa sản phẩm thành công!');
+                            fetchAdminHome();
+                        } else {
+                            showError(`Lỗi: ${data.error} - ${data.details}`);
+                        }
+                    } catch (error) {
+                        showError('Lỗi khi xóa sản phẩm: ' + error.message);
+                    } finally {
+                        showLoading(false);
+                    }
+                }
+            });
+        });
+    }
+
+    async function fetchAdminHome() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            showError('Vui lòng đăng nhập để tiếp tục.');
+            setTimeout(() => {
+                window.location.href = '/user/login?error=PleaseLogin';
+            }, 3000);
+            return;
+        }
+
+        showLoading(true);
+        showError('');
+        showSuccess('');
+        try {
+            const response = await fetch('/api/admin/home', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                showError(`Lỗi: ${data.error} - ${data.details}`);
+                if (response.status === 401) {
+                    setTimeout(() => {
+                        window.location.href = '/user/login?error=InvalidToken';
+                    }, 3000);
+                }
+                return;
+            }
+
+            document.getElementById('movieCount').textContent = data.movieCount || 0;
+            document.getElementById('userCount').textContent = data.userCount || 0;
+            document.getElementById('categoryCount').textContent = data.categoryCount || 0;
+            updateProductList(data.products);
+        } catch (error) {
+            showError('Lỗi khi tải dữ liệu: ' + error.message);
+        } finally {
+            showLoading(false);
+        }
+    }
+
+    async function logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        localStorage.removeItem('fullName');
+        await fetch('/api/user/logout');
+        window.location.href = '/user/login';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchAdminHome();
+    });
+</script>
+</body>
+</html>

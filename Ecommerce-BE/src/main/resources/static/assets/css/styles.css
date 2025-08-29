@@ -1,0 +1,271 @@
+:root {
+  --dark-bg: #111111;
+  --light-text: rgba(255, 255, 255, 0.7);
+  --primary-color: #ffc107;
+  --white: #fff;
+  --black: #000;
+  --transition: all 0.3s ease;
+  --navbar-height: 70px;
+  --footer-bg: #000;
+  --swiper-height: 500px;
+  --swiper-slide-width: 350px;
+}
+
+/* Navbar Styles */
+.navbar {
+  background: var(--black);
+  padding: 15px 0;
+  position: static;
+  width: 100%;
+  top: 0;
+  left: 0;
+  transition: var(--transition);
+  z-index: 1050;
+}
+
+.navbar.scrolled {
+  background: var(--black);
+  padding: 10px 0;
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+}
+
+.nav-link {
+  color: var(--light-text);
+  margin: 0 15px;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: var(--primary-color);
+}
+
+/*Home Sections */
+.movie-poster-slider {
+  width: 100%;
+  padding: 40px 0;
+  background: var(--dark-bg);
+  position: relative;
+}
+
+.movie-poster-slider h2 {
+  margin-bottom: 15px;
+  padding: 0 60px;
+  color: var(--white);
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.swiper {
+  width: 100%;
+  height: var(--swiper-height) !important;
+  overflow: hidden;
+}
+
+.swiper-wrapper {
+  height: var(--swiper-height) !important;
+}
+
+.swiper-slide {
+  width: var(--swiper-slide-width) !important;
+  height: var(--swiper-height) !important;
+  position: relative;
+  padding: 0 10px;
+}
+
+.movie-poster {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.movie-title {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  color: white;
+  text-align: center;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.7);
+  font-size: 20px;
+}
+
+/* Badge styles */
+.top-badge {
+  position: absolute;
+  padding: 5px 15px;
+  font-size: 16px;
+  font-weight: 500;
+  z-index: 1;
+}
+
+/* Footer */
+.footer {
+  background-color: var(--footer-bg);
+  color: var(--light-text);
+  padding: 3rem 0;
+  margin-top: 3rem;
+}
+
+.footer-brand {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.footer-brand span {
+  color: var(--white);
+}
+
+.location {
+  color: var(--light-text);
+  margin-bottom: 1rem;
+}
+
+.footer h5 {
+  color: var(--white);
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links li {
+  margin-bottom: 0.8rem;
+}
+
+.footer-links a {
+  color: var(--light-text);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: var(--primary-color);
+}
+
+/* Movie Styles */
+.movie-card {
+  background: var(--dark-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.movie-poster img {
+  width: 100%;
+  height: var(--swiper-height);
+  object-fit: cover;
+}
+
+.movie-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  color: var(--white);
+}
+
+.filter-container {
+  background: var(--dark-bg);
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.pagination {
+  justify-content: center;
+  gap: 5px;
+}
+
+/* Delete Button Styles */
+.delete-form {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  z-index: 2;
+}
+
+.delete-btn {
+  background: rgba(220, 53, 69, 0.9);
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: var(--transition);
+}
+
+/* Video Player*/
+
+.video-container {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+  background: #000;
+}
+.video-container video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.progress-status {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.7);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  display: none;
+  z-index: 100;
+}
+.playlist-container {
+  margin-top: 20px;
+  max-height: 300px;
+  overflow-y: auto;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+}
+.segment-button {
+  width: 100%;
+  padding: 12px;
+  margin: 5px 0;
+  text-align: left;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.segment-button:hover {
+  background: #e9ecef;
+}
+.segment-button.active {
+  background: #007bff;
+  color: white;
+  border-color: #0056b3;
+}
+.now-playing {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 10px;
+}

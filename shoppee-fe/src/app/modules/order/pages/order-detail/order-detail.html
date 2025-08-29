@@ -1,0 +1,32 @@
+<div class="order-detail-container">
+	<mat-card *ngIf="order">
+		<mat-card-title>Chi tiết đơn hàng #{{order.id}}</mat-card-title>
+		<mat-card-content>
+			<p><b>Ngày đặt:</b> {{order.date | date}}</p>
+			<p><b>Trạng thái:</b> {{order.status}}</p>
+			<mat-table [dataSource]="order.items">
+				<ng-container matColumnDef="name">
+					<mat-header-cell *matHeaderCellDef> Sản phẩm </mat-header-cell>
+					<mat-cell *matCellDef="let item"> {{item.name}} </mat-cell>
+				</ng-container>
+				<ng-container matColumnDef="quantity">
+					<mat-header-cell *matHeaderCellDef> Số lượng </mat-header-cell>
+					<mat-cell *matCellDef="let item"> {{item.quantity}} </mat-cell>
+				</ng-container>
+				<ng-container matColumnDef="price">
+					<mat-header-cell *matHeaderCellDef> Giá </mat-header-cell>
+					<mat-cell *matCellDef="let item"> {{item.price | currency:'VND'}} </mat-cell>
+				</ng-container>
+				<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+				<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+			</mat-table>
+			<div class="order-total">
+				<b>Tổng tiền: </b> {{order.total | currency:'VND'}}
+			</div>
+		</mat-card-content>
+	</mat-card>
+	<div *ngIf="!order">
+		<mat-spinner></mat-spinner>
+		<p>Đang tải thông tin đơn hàng...</p>
+	</div>
+</div>
